@@ -4,7 +4,7 @@ const users = require("../mock/users")
 const createUser = (req, res) => {
     const { name, email, type, password } = req.body;
     try {
-        const userWithEmailAlreadyExists = users.find((user) => { user.email === email })
+        const userWithEmailAlreadyExists = users.find((user) => { return user.email === email })
         if (userWithEmailAlreadyExists) {
             res.status(409).json(
                 {
@@ -17,16 +17,17 @@ const createUser = (req, res) => {
         }
 
         let defineUserId = users.copyWithin().reverse()[0]
-
-        users.push({
+        let userToPush = {
             id: parseInt(defineUserId.id) + 1,
             name,
             email,
             type,
             password
-        });
+        }
 
-        res.status(200).json({ message: "Usuario cadastrado com sucesso." });
+        users.push(userToPush);
+
+        res.status(200).json({ user: userToPush, message: "Usuario cadastrado com sucesso." });
     }
     catch (error) {
         // TODO: Add logging mechanism
